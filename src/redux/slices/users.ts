@@ -31,6 +31,18 @@ export const getUsers = createAsyncThunk(
   }
 );
 
+interface UserPut {
+  id: number;
+  token: string;
+}
+export const deleteUser = createAsyncThunk(
+  "users/deleteUser",
+  async (data: UserPut) => {
+    const response = await axiosConfig(data.token).delete(`users/${data.id}/`);
+    return response.data;
+  }
+);
+
 const userSlice = createSlice({
   name: "users",
   initialState,

@@ -4,7 +4,6 @@ import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   Bars3BottomLeftIcon,
   BellIcon,
-  CalendarIcon,
   CheckCircleIcon,
   HomeIcon,
   UsersIcon,
@@ -21,12 +20,6 @@ const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: true },
   { name: "My Tasks", href: "/mytasks", icon: CheckCircleIcon, current: false },
   { name: "My Team", href: "/myteam", icon: UsersIcon, current: false },
-  {
-    name: "Calendar",
-    href: "/calendarview",
-    icon: CalendarIcon,
-    current: false,
-  },
 ];
 
 function classNames(...classes: string[]) {

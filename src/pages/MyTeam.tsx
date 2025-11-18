@@ -731,7 +731,7 @@ import {
 import { useAppDispatch, type RootState } from "../redux/store/store";
 import { useSelector } from "react-redux";
 import { getData } from "../config/localStorage";
-import { addUser, getUsers } from "../redux/slices/users";
+import { addUser, deleteUser, getUsers } from "../redux/slices/users";
 import type { Result } from "../types/user";
 import { toast } from "sonner";
 import { createTask, getUserTasks } from "../redux/slices/tasksSlice";
@@ -835,11 +835,18 @@ const MyTeam = () => {
     setShowAddUserModal(false);
   };
 
-  const handleDeleteUser = (userId) => {
-    setTeamMembers(teamMembers.filter((member) => member.id !== userId));
-    setTasks(tasks.filter((task) => task.assignedTo !== userId));
+  const handleDeleteUser = async (userId: number) => {
+    const user: { access: string } = await getData("user");
+    await dispatch(
+      deleteUser({
+        token: user.access,
+        id: userId,
+      })
+    );
+
+    await dispatch(getUsers(user.access));
+    toast.success("User deleted successfully");
     setShowDeleteConfirm(false);
-    setMemberToDelete(null);
   };
 
   const confirmDelete = (member: Result) => {
@@ -934,19 +941,6 @@ const MyTeam = () => {
     }
   };
 
-  const getPriorityColor = (priority) => {
-    switch (priority) {
-      case "high":
-        return "bg-red-100 text-red-700";
-      case "medium":
-        return "bg-yellow-100 text-yellow-700";
-      case "low":
-        return "bg-green-100 text-green-700";
-      default:
-        return "bg-gray-100 text-gray-700";
-    }
-  };
-
   const getStatusColor = (status: string) => {
     switch (status) {
       case "completed":
@@ -958,10 +952,6 @@ const MyTeam = () => {
       default:
         return "bg-gray-100 text-gray-700";
     }
-  };
-
-  const getMemberTasks = (memberId: number) => {
-    return tasks.filter((task) => task.assignedTo === memberId);
   };
 
   return (
