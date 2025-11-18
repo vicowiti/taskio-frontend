@@ -1,5 +1,5 @@
 import Logo from "../assets/logo.png";
-import { Fragment, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Dialog, Menu, Transition } from "@headlessui/react";
 import {
   Bars3BottomLeftIcon,
@@ -11,7 +11,11 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { MagnifyingGlassIcon } from "@heroicons/react/20/solid";
-import { NavLink, useLocation } from "react-router";
+import { NavLink, useLocation, useNavigate } from "react-router";
+import { clearStorage, getData } from "../config/localStorage";
+import type { LoggedUser } from "../types/user";
+import ChangePasswordModal from "../components/ChangePasswordModal";
+import { FaUser } from "react-icons/fa";
 
 const navigation = [
   { name: "Dashboard", href: "/dashboard", icon: HomeIcon, current: true },
@@ -24,11 +28,6 @@ const navigation = [
     current: false,
   },
 ];
-const userNavigation = [
-  { name: "Your Profile", href: "#" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
-];
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ");
@@ -39,11 +38,28 @@ interface Props {
 }
 
 export default function DashboardShell(props: Props) {
+  const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [loggedUser, setLoggedUser] = useState<LoggedUser | null>(null);
   const locale = useLocation();
+
+  useEffect(() => {
+    async function getUser() {
+      const user: LoggedUser = await getData("user");
+
+      setLoggedUser(user);
+    }
+    getUser();
+  }, []);
+
+  const userNavigation = [
+    { name: "Your Profile", href: "#" },
+    { name: "Settings", href: "#" },
+  ];
+
   return (
     <>
-      <div>
+      <div className="">
         <Transition.Root show={sidebarOpen} as={Fragment}>
           <Dialog
             as="div"
@@ -218,11 +234,7 @@ export default function DashboardShell(props: Props) {
                   <div>
                     <Menu.Button className="flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                       <span className="sr-only">Open user menu</span>
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                        alt=""
-                      />
+                      <FaUser className="h-8 w-8 rounded-full" />
                     </Menu.Button>
                   </div>
                   <Transition
@@ -235,6 +247,12 @@ export default function DashboardShell(props: Props) {
                     leaveTo="transform opacity-0 scale-95"
                   >
                     <Menu.Items className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+                      <Menu.Item>
+                        <p className="block px-4 py-2 text-sm text-gray-700">
+                          {loggedUser?.user.first_name}{" "}
+                          {loggedUser?.user.last_name}
+                        </p>
+                      </Menu.Item>
                       {userNavigation.map((item) => (
                         <Menu.Item key={item.name}>
                           {({ active }) => (
@@ -250,6 +268,15 @@ export default function DashboardShell(props: Props) {
                           )}
                         </Menu.Item>
                       ))}
+                      <button
+                        className="block hover:underline px-4 py-2 text-sm text-gray-700 cursor-pointer"
+                        onClick={async () => {
+                          await clearStorage();
+                          navigate("/");
+                        }}
+                      >
+                        Logout
+                      </button>
                     </Menu.Items>
                   </Transition>
                 </Menu>
@@ -257,7 +284,16 @@ export default function DashboardShell(props: Props) {
             </div>
           </div>
 
-          <main className="flex-1">{props.children}</main>
+          <main className="flex-1">
+            {loggedUser?.user.has_default_password ? (
+              <div className="flex justify-center items-center flex-col mt-4">
+                <p>Please change passsword to continue</p>
+                <ChangePasswordModal />
+              </div>
+            ) : (
+              props.children
+            )}
+          </main>
         </div>
       </div>
     </>

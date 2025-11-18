@@ -7,7 +7,7 @@ const initialState = {};
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
   async (data: LoginPayload) => {
-    const response = await axiosConfig("").post("/auth/token/", data);
+    const response = await axiosConfig("").post("auth/newpass/", data);
 
     return response.data;
   }

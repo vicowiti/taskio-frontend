@@ -34,6 +34,8 @@ export default function Login() {
       setLoading(false);
       return;
     } catch (error) {
+      console.log(error);
+
       setLoading(false);
       toast.error("Login Failed");
     }
@@ -65,18 +67,17 @@ export default function Login() {
                       htmlFor="email"
                       className="block text-sm font-medium text-gray-700"
                     >
-                      Email address
+                      Username
                     </label>
                     <div className="mt-1">
                       <input
-                        id="email"
+                        id="username"
                         value={username}
                         onChange={(e) =>
                           setUsername(e.target.value.toLowerCase())
                         }
-                        name="email"
-                        type="email"
-                        autoComplete="email"
+                        name="username"
+                        type="text"
                         required
                         className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       />
@@ -97,7 +98,6 @@ export default function Login() {
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        autoComplete="current-password"
                         required
                         className="block w-full appearance-none rounded-md border border-gray-300 px-3 py-2 placeholder-gray-400 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                       />
