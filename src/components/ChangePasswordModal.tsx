@@ -11,6 +11,7 @@ export default function ChangePasswordModal() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: "",
     oldPassword: "",
@@ -29,10 +30,9 @@ export default function ChangePasswordModal() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission here
-    console.log("Form data:", formData);
 
     try {
+      setLoading(true);
       const response = await dispatch(
         loginUser({
           username: formData.username,
@@ -45,10 +45,12 @@ export default function ChangePasswordModal() {
         toast.success("Password changed. Please login.");
         await clearStorage();
         navigate("/");
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
       toast.error("Error changing password");
+      setLoading(false);
     }
 
     setOpen(false);
@@ -171,10 +173,11 @@ export default function ChangePasswordModal() {
                     </div>
                     <div className="mt-5 sm:mt-6 sm:grid sm:grid-flow-row-dense sm:grid-cols-2 sm:gap-3">
                       <button
+                        disabled={loading}
                         type="submit"
-                        className="inline-flex w-full justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
+                        className="inline-flex w-full justify-center rounded-md border disabled:bg-indigo-400 border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:col-start-2 sm:text-sm"
                       >
-                        Update
+                        {loading ? "Updating..." : "Update"}
                       </button>
                       <button
                         type="button"
