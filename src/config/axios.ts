@@ -19,7 +19,7 @@ const axiosConfig = (token = "", contentType = "") => {
       if (error.response?.status === 401) {
         await clearStorage();
         toast.info("Please log in again.");
-        window.location.replace("/");
+        // window.location.replace("/");
       }
       return Promise.reject(error);
     }

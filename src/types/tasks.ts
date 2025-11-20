@@ -17,10 +17,11 @@ export interface ResultTask {
   id: number;
   title: string;
   description: string;
-  status: string;
+  status: "TODO" | "IN_PROGRESS" | "DONE";
   deadline: string;
   assignee: number;
   created_by: number;
   created_at: string;
   updated_at: string;
+  created_by_username: string;
 }

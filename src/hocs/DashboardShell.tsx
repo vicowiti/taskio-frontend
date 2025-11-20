@@ -40,10 +40,13 @@ export default function DashboardShell(props: Props) {
     async function getUser() {
       const user: LoggedUser = await getData("user");
 
+      if (!user) {
+        navigate("/");
+      }
       setLoggedUser(user);
     }
     getUser();
-  }, []);
+  }, [navigate]);
 
   const userNavigation = [
     { name: "Your Profile", href: "#" },

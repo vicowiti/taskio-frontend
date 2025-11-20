@@ -1,115 +1,21 @@
-import React from "react";
-import {
-  FaCheckCircle,
-  FaClock,
-  FaExclamationCircle,
-  FaTasks,
-} from "react-icons/fa";
+import { FaCheckCircle, FaClock, FaTasks } from "react-icons/fa";
+import { useSelector } from "react-redux";
+import type { RootState } from "../redux/store/store";
+import StatCard from "./StatCard";
 
 const Dash = () => {
-  const stats = [
-    {
-      title: "Total Tasks",
-      value: 24,
-      icon: <FaTasks className="w-6 h-6" />,
-      color: "blue",
-    },
-    {
-      title: "Pending Tasks",
-      value: 12,
-      icon: <FaClock className="w-6 h-6" />,
-      color: "yellow",
-    },
-    {
-      title: "Completed Tasks",
-      value: 10,
-      icon: <FaCheckCircle className="w-6 h-6" />,
-      color: "green",
-    },
-    {
-      title: "Overdue Tasks",
-      value: 2,
-      icon: <FaExclamationCircle className="w-6 h-6" />,
-      color: "red",
-    },
-  ];
-
-  const tasks = [
-    {
-      id: 1,
-      title: "Design new landing page",
-      status: "pending",
-      priority: "high",
-      dueDate: "2025-11-20",
-    },
-    {
-      id: 2,
-      title: "Update user documentation",
-      status: "completed",
-      priority: "medium",
-      dueDate: "2025-11-18",
-    },
-    {
-      id: 3,
-      title: "Fix responsive issues",
-      status: "overdue",
-      priority: "high",
-      dueDate: "2025-11-15",
-    },
-    {
-      id: 4,
-      title: "Team meeting preparation",
-      status: "pending",
-      priority: "low",
-      dueDate: "2025-11-22",
-    },
-    {
-      id: 5,
-      title: "Code review for PR #234",
-      status: "pending",
-      priority: "medium",
-      dueDate: "2025-11-19",
-    },
-  ];
+  const { stats } = useSelector((state: RootState) => state.tasks);
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "completed":
+      case "DONE":
         return "bg-green-100 text-green-700";
-      case "pending":
+      case "IN_PROGRESS":
         return "bg-yellow-100 text-yellow-700";
-      case "overdue":
+      case "TODO":
         return "bg-red-100 text-red-700";
       default:
         return "bg-gray-100 text-gray-700";
-    }
-  };
-
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case "high":
-        return "text-red-600";
-      case "medium":
-        return "text-yellow-600";
-      case "low":
-        return "text-green-600";
-      default:
-        return "text-gray-600";
-    }
-  };
-
-  const getCardBgColor = (color: string) => {
-    switch (color) {
-      case "blue":
-        return "bg-blue-50 text-blue-600";
-      case "yellow":
-        return "bg-yellow-50 text-yellow-600";
-      case "green":
-        return "bg-green-50 text-green-600";
-      case "red":
-        return "bg-red-50 text-red-600";
-      default:
-        return "bg-gray-50 text-gray-600";
     }
   };
 
@@ -122,26 +28,30 @@ const Dash = () => {
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-          {stats.map((stat, index) => (
-            <div
-              key={index}
-              className="bg-white rounded-xl shadow-sm border border-gray-100 p-6 hover:shadow-md transition-shadow duration-200"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-gray-500 font-medium mb-1">
-                    {stat.title}
-                  </p>
-                  <p className="text-3xl font-bold text-gray-800">
-                    {stat.value}
-                  </p>
-                </div>
-                <div className={`${getCardBgColor(stat.color)} p-3 rounded-lg`}>
-                  {stat.icon}
-                </div>
-              </div>
-            </div>
-          ))}
+          <StatCard
+            title="Total Tasks"
+            color="bg-blue-50 text-blue-600"
+            icon={FaTasks}
+            value={stats?.stats.total_tasks || 0}
+          />
+          <StatCard
+            title="Pending Tasks"
+            color="bg-yellow-50 text-yellow-600"
+            icon={FaClock}
+            value={stats?.stats.todo_tasks || 0}
+          />
+          <StatCard
+            title="In Progress"
+            color="bg-blue-50 text-blue-600"
+            icon={FaClock}
+            value={stats?.stats.in_progress_tasks || 0}
+          />
+          <StatCard
+            title="Done Tasks"
+            color="bg-green-50 text-green-600"
+            icon={FaCheckCircle}
+            value={stats?.stats.done_tasks || 0}
+          />
         </div>
 
         {/* Task List */}
@@ -152,7 +62,7 @@ const Dash = () => {
             </h2>
           </div>
           <div className="divide-y divide-gray-100">
-            {tasks.map((task) => (
+            {stats?.summary_tasks.map((task) => (
               <div
                 key={task.id}
                 className="px-6 py-4 hover:bg-gray-50 transition-colors duration-150"
@@ -170,21 +80,13 @@ const Dash = () => {
                       >
                         {task.status}
                       </span>
-                      <span
-                        className={`text-xs font-medium ${getPriorityColor(
-                          task.priority
-                        )}`}
-                      >
-                        {task.priority} priority
-                      </span>
+
                       <span className="text-gray-500 text-xs">
-                        Due: {task.dueDate}
+                        Due: {new Date(task.deadline).toLocaleString()}
                       </span>
                     </div>
                   </div>
-                  <button className="self-start sm:self-center px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors duration-150">
-                    View Details
-                  </button>
+                  <></>
                 </div>
               </div>
             ))}
