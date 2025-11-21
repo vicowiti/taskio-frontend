@@ -18,8 +18,10 @@ const axiosConfig = (token = "", contentType = "") => {
     async (error) => {
       if (error.response?.status === 401) {
         await clearStorage();
-        toast.info("Please log in again.");
-        // window.location.replace("/");
+        // toast.info("Please log in again.");
+
+        window.location.replace("/");
+        toast.info("Session expired.Please log in again.");
       }
       return Promise.reject(error);
     }
