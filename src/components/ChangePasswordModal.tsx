@@ -46,6 +46,9 @@ export default function ChangePasswordModal() {
         await clearStorage();
         navigate("/");
         setLoading(false);
+      } else {
+        toast.error("Unable to update password");
+        setLoading(false);
       }
     } catch (error) {
       console.log(error);
