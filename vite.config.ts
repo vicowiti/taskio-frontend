@@ -4,6 +4,22 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://vite.dev/config/
 export default defineConfig({
+   base: '/',
+  
+  build: {
+    outDir: 'dist',
+    assetsDir: 'assets'
+  },
+   // Development server configuration
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://taskios.duckdns.org',
+        changeOrigin: true,
+        secure: false
+      }
+    }
+  },
   plugins: [
     react({
       babel: {
