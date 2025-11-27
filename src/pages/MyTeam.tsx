@@ -384,6 +384,7 @@ const MyTeam = () => {
                   <input
                     type="text"
                     name="username"
+                    required
                     value={newUser.username}
                     onChange={handleInputChange}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
@@ -397,6 +398,7 @@ const MyTeam = () => {
                   </label>
                   <input
                     type="email"
+                    required
                     name="email"
                     value={newUser.email}
                     onChange={handleInputChange}
@@ -412,6 +414,7 @@ const MyTeam = () => {
                     </label>
                     <input
                       type="text"
+                      required
                       name="first_name"
                       value={newUser.first_name}
                       onChange={handleInputChange}
@@ -426,6 +429,7 @@ const MyTeam = () => {
                     </label>
                     <input
                       type="text"
+                      required
                       name="last_name"
                       value={newUser.last_name}
                       onChange={handleInputChange}
@@ -441,6 +445,7 @@ const MyTeam = () => {
                   </label>
                   <select
                     name="role"
+                    required
                     value={newUser.role}
                     onChange={(e) => handleInputChange(e)}
                     className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
